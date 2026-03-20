@@ -1,6 +1,9 @@
 services:
 #
   zabbix-server:
+    extends:
+      file: common-logging.yml
+      service: base-service
     build:
       context: ./zabbix-server/
     environment:
@@ -13,6 +16,9 @@ services:
       - frontend_bridge
 #
   zabbix-database:
+    extends:
+      file: common-logging.yml
+      service: base-service
     image: postgres
     environment:
       POSTGRES_USER: ${POSTGRES_DB:-zabbix}
@@ -30,6 +36,9 @@ services:
       - database_network_default
 #
   zabbix-database-webmin:
+    extends:
+      file: common-logging.yml
+      service: base-service
     image: dpage/pgadmin4:latest
     environment:
       TZ: Asia/Tokyo
