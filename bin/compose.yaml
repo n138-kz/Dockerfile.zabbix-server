@@ -11,11 +11,6 @@ services:
         restart: unless-stopped
         networks:
             - frontend_bridge
-        logging:
-          driver: json-file
-          options:
-              max-size: "1024k"
-              max-file: "10"
 #
     zabbix-database:
         image: postgres
@@ -26,11 +21,6 @@ services:
             - database-store:/var/lib/postgresql/data
         networks:
             - database_network_default
-        logging:
-          driver: json-file
-          options:
-              max-size: "1024k"
-              max-file: "10"
 #
     zabbix-database-webmin:
         image: dpage/pgadmin4:latest
@@ -55,11 +45,6 @@ services:
            - database_network_default
         ports:
            - "${PGADMIN_WEBPORT:-30001-30200}:80"
-        logging:
-          driver: json-file
-          options:
-              max-size: "1024k"
-              max-file: "10"
 
 volumes:
     pgadmin-store:

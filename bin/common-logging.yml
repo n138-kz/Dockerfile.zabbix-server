@@ -1,0 +1,7 @@
+services:
+  base-service:
+    logging:
+    driver: json-file
+    options:
+      max-size: "1024k"
+      max-file: "10"
