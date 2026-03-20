@@ -34,7 +34,9 @@ services:
     volumes:
       - database-store:/var/lib/postgresql/data
     networks:
-      - database_network_default
+      database_network_default:
+        aliases:
+          - database
 #
   zabbix-database-webmin:
     extends:
