@@ -56,7 +56,7 @@ services:
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-password}
     restart: unless-stopped
     healthcheck:
-      test: wget -O - http://localhost:80/misc/healthcheck
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:80/misc/healthcheck || exit 1"]
       interval: 10s
       timeout: 1s
       retries: 3
