@@ -1,56 +1,63 @@
 services:
 #
-    zabbix-server:
-        build:
-            context: ./zabbix-server/
-        environment:
-            TZ: Asia/Tokyo
-            LANG: C
-            LANGUAGE: C
-            LC_ALL: C
-        restart: unless-stopped
-        networks:
-            - frontend_bridge
+  zabbix-server:
+    build:
+      context: ./zabbix-server/
+    environment:
+      TZ: Asia/Tokyo
+      LANG: C
+      LANGUAGE: C
+      LC_ALL: C
+    restart: unless-stopped
+    networks:
+      - frontend_bridge
 #
-    zabbix-database:
-        image: postgres
-        environment:
-            POSTGRES_USER: ${POSTGRES_DB:-zabbix}
-            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
-        volumes:
-            - database-store:/var/lib/postgresql/data
-        networks:
-            - database_network_default
+  zabbix-database:
+    image: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_DB:-zabbix}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    volumes:
+      - database-store:/var/lib/postgresql/data
+    networks:
+      - database_network_default
 #
-    zabbix-database-webmin:
-        image: dpage/pgadmin4:latest
-        environment:
-            TZ: Asia/Tokyo
-            LANG: C
-            LANGUAGE: C
-            LC_ALL: C
-            PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@localhost.local}
-            PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-password}
-        restart: unless-stopped
-        healthcheck:
-           test: wget -O - http://localhost:80/misc/healthcheck
-           interval: 10s
-           timeout: 1s
-           retries: 3
-           start_period: 10s
-        volumes:
-           - pgadmin-store:/var/lib/pgadmin
-        networks:
-           - frontend_bridge
-           - database_network_default
-        ports:
-           - "${PGADMIN_WEBPORT:-30001-30200}:80"
+  zabbix-database-webmin:
+    image: dpage/pgadmin4:latest
+    environment:
+      TZ: Asia/Tokyo
+      LANG: C
+      LANGUAGE: C
+      LC_ALL: C
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@localhost.local}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-password}
+    restart: unless-stopped
+    healthcheck:
+       test: wget -O - http://localhost:80/misc/healthcheck
+       interval: 10s
+       timeout: 1s
+       retries: 3
+       start_period: 10s
+    volumes:
+       - pgadmin-store:/var/lib/pgadmin
+    networks:
+       - frontend_bridge
+       - database_network_default
+    ports:
+       - "${PGADMIN_WEBPORT:-30001-30200}:80"
 
 volumes:
-    pgadmin-store:
-    database-store:
+  pgadmin-store:
+  database-store:
 networks:
-    frontend_bridge:
-    database_network_default:
-        driver: bridge
-        internal: true
+  frontend_bridge:
+  database_network_default:
+    driver: bridge
+    internal: true
