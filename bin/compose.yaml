@@ -2,8 +2,8 @@ services:
 #
   zabbix-server:
     extends:
-      file: common-logging.yml
-      service: base-service
+      - file: common-logging.yml
+        service: base-service
     build:
       context: ./zabbix-server/
     environment:
@@ -21,9 +21,9 @@ services:
 #
   zabbix-database:
     extends:
-      file: common-logging.yml
-      service: base-service
     image: postgres
+      - file: common-logging.yml
+        service: base-service
     environment:
       POSTGRES_USER: ${POSTGRES_DB:-zabbix}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
@@ -43,8 +43,8 @@ services:
 #
   zabbix-database-webmin:
     extends:
-      file: common-logging.yml
-      service: base-service
+      - file: common-logging.yml
+        service: base-service
     image: dpage/pgadmin4:latest
     environment:
       TZ: Asia/Tokyo
