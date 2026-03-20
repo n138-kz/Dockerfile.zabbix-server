@@ -33,16 +33,14 @@ services:
               max-file: "10"
 #
     zabbix-database-webmin:
-        build:
-            context: ./zabbix-server/
-            args:
-                PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@localhost.local}
-                PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-password}
+        image: dpage/pgadmin4:latest
         environment:
             TZ: Asia/Tokyo
             LANG: C
             LANGUAGE: C
             LC_ALL: C
+            PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@localhost.local}
+            PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-password}
         restart: unless-stopped
         healthcheck:
            test: wget -O - http://localhost:80/misc/healthcheck
