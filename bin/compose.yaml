@@ -24,6 +24,8 @@ services:
     networks:
       - frontend_bridge
       - database_network_default
+    ports:
+      - "${PGADMIN_WEBPORT:-30001-30200}:80"
 #
   zabbix-database:
     extends:
