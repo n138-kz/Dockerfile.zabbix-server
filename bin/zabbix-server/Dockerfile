@@ -25,7 +25,7 @@ RUN mkdir -p /zabbix-sql && cp /usr/share/zabbix/sql-scripts/postgresql/server.s
 RUN sed -i 's/^# LogType=file/LogType=console/g' /etc/zabbix/zabbix_server.conf
 RUN sed -i 's/^# DBHost=localhost/DBHost=database/g' /etc/zabbix/zabbix_server.conf
 RUN sed -i 's/^# DBPassword=/DBPassword=password/g' /etc/zabbix/zabbix_server.conf
-RUN sed -i 's|^# PidFile=/run/zabbix/zabbix_server.pid|PidFile=/run/zabbix_server.pid|g' /etc/zabbix/zabbix_server.conf
+RUN sed -i 's|PidFile=/run/zabbix/zabbix_server.pid|PidFile=/run/zabbix_server.pid|g' /etc/zabbix/zabbix_server.conf
 RUN chown zabbix:zabbix /etc/zabbix/zabbix_server.conf
 
 # zabbixユーザーで実行するように指定
