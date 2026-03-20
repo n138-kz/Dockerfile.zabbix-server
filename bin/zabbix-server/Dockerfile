@@ -26,5 +26,8 @@ RUN sed -i 's/^# LogType=file/LogType=console/g' /etc/zabbix/zabbix_server.conf 
     sed -i 's/^# DBHost=localhost/DBHost=database/g' /etc/zabbix/zabbix_server.conf && \
     sed -i 's/^# DBPassword=/DBPassword=password/g' /etc/zabbix/zabbix_server.conf
 
+# zabbixユーザーで実行するように指定
+USER zabbix
+
 # Start Zabbix server and agent processes
 CMD ["/usr/sbin/zabbix_server", "-f", "-c", "/etc/zabbix/zabbix_server.conf"]
