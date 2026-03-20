@@ -10,6 +10,41 @@ services:
         restart: unless-stopped
         networks:
            - frontend_bridge
+    zabbix-database-webmin:
+        build:
+            context: ./zabbix-server/
+            args:
+                PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@localhost.local}
+                PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-password}
+        environment:
+            TZ: Asia/Tokyo
+            LANG: C
+            LANGUAGE: C
+            LC_ALL: C
+        restart: unless-stopped
+        healthcheck:
+           test: wget -O - http://localhost:80/misc/healthcheck
+           interval: 10s
+           timeout: 1s
+           retries: 3
+           start_period: 10s
+        volumes:
+           - pgadmin-store:/var/lib/pgadmin
+        networks:
+           - frontend_bridge
+           - database_network_default
+        ports:
+           - "${PGADMIN_WEBPORT:-30001-30200}:80"
+        logging:
+          driver: json-file
+          options:
+              max-size: "1024k"
+              max-file: "10"
 
+volumes:
+    pgadmin-store:
 networks:
     frontend_bridge:
+    database_network_default:
+        driver: bridge
+        internal: true
