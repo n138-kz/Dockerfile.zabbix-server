@@ -1,0 +1,12 @@
+services:
+  base-service:
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1024k"
+        max-file: "10"
+    healthcheck:
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s

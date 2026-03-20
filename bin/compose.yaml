@@ -1,0 +1,97 @@
+services:
+#
+  zabbix-web:
+    image: zabbix/zabbix-web-apache-pgsql:alpine-7.4-latest
+    environment:
+      - ZBX_SERVER_HOST=zabbix-server
+      - DB_SERVER_HOST=zabbix-database
+      - POSTGRES_USER=zabbix
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=zabbix
+    depends_on:
+      - zabbix-server
+    networks:
+      - frontend_bridge
+      - database_network_default
+    ports:
+      - "${PGADMIN_WEBPORT:-30001-30200}:8080"
+      - "${PGADMIN_WEBPORT_SECURE:-30001-30200}:8443"
+#
+  zabbix-server:
+    extends:
+      file: common.yml
+      service: base-service
+    build:
+      context: ./zabbix-server/
+    environment:
+      ZBX_ENABLE_REMOTE_COMMANDS: 1
+      ZBX_ALLOWROOT: 1
+      TZ: Asia/Tokyo
+      LANG: C
+      LANGUAGE: C
+      LC_ALL: C
+    tmpfs:
+      - /tmp:mode=1777
+      - /run:mode=1777
+      - /var/run:mode=1777
+    restart: unless-stopped
+    depends_on:
+      zabbix-database:
+        condition: service_healthy
+    volumes:
+      - ./zabbix-sql:/zabbix-sql
+    networks:
+      - frontend_bridge
+      - database_network_default
+#
+  zabbix-database:
+    extends:
+      file: common.yml
+      service: base-service
+    image: postgres:16
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-zabbix}
+      POSTGRES_DB: ${POSTGRES_DB:-zabbix}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+    volumes:
+      - database-store:/var/lib/postgresql/data
+      - ./zabbix-sql:/docker-entrypoint-initdb.d:ro
+    networks:
+      database_network_default:
+        aliases:
+          - database
+#
+  zabbix-database-webmin:
+    extends:
+      file: common.yml
+      service: base-service
+    image: dpage/pgadmin4:latest
+    environment:
+      TZ: Asia/Tokyo
+      LANG: C
+      LANGUAGE: C
+      LC_ALL: C
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@example.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-password}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:80/ || exit 1"]
+    volumes:
+      - pgadmin-store:/var/lib/pgadmin
+    networks:
+      - frontend_bridge
+      - database_network_default
+    ports:
+      - "${PGADMIN_WEBPORT:-30001-30200}:80"
+
+volumes:
+  pgadmin-store:
+  database-store:
+networks:
+  frontend_bridge:
+  database_network_default:
+    driver: bridge
+    internal: true
