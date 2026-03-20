@@ -9,7 +9,7 @@ services:
             LC_ALL: C
         restart: unless-stopped
         networks:
-           - frontend_bridge
+            - frontend_bridge
         logging:
           driver: json-file
           options:
