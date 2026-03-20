@@ -21,10 +21,12 @@ RUN apt-get install -y zabbix-server-pgsql zabbix-frontend-php php8.3-pgsql zabb
 # Create initial database
 RUN mkdir -p /zabbix-sql && cp /usr/share/zabbix/sql-scripts/postgresql/server.sql.gz /zabbix-sql/
 
-# Zabbix Server の設定ファイルを編集 (DB接続先を "database" に向ける)
-RUN sed -i 's/^# LogType=file/LogType=console/g' /etc/zabbix/zabbix_server.conf && \
-    sed -i 's/^# DBHost=localhost/DBHost=database/g' /etc/zabbix/zabbix_server.conf && \
-    sed -i 's/^# DBPassword=/DBPassword=password/g' /etc/zabbix/zabbix_server.conf
+# Zabbix Server の設定ファイルを編集
+RUN sed -i 's/^# LogType=file/LogType=console/g' /etc/zabbix/zabbix_server.conf
+RUN sed -i 's/^# DBHost=localhost/DBHost=database/g' /etc/zabbix/zabbix_server.conf
+RUN sed -i 's/^# DBPassword=/DBPassword=password/g' /etc/zabbix/zabbix_server.conf
+RUN sed -i 's|^# PidFile=/run/zabbix/zabbix_server.pid|PidFile=/run/zabbix_server.pid|g' /etc/zabbix/zabbix_server.conf
+RUN chown zabbix:zabbix /etc/zabbix/zabbix_server.conf
 
 # zabbixユーザーで実行するように指定
 USER zabbix
