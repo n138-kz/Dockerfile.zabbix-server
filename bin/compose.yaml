@@ -25,7 +25,8 @@ services:
         service: base-service
     image: postgres:16
     environment:
-      POSTGRES_USER: ${POSTGRES_DB:-zabbix}
+      POSTGRES_USER: ${POSTGRES_USER:-zabbix}
+      POSTGRES_DB: ${POSTGRES_DB:-zabbix}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
     restart: unless-stopped
     healthcheck:
