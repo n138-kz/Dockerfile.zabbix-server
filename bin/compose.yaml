@@ -16,8 +16,8 @@ services:
       zabbix-database:
         condition: service_healthy
     networks:
-       - frontend_bridge
-       - database_network_default
+      - frontend_bridge
+      - database_network_default
 #
   zabbix-database:
     extends:
@@ -61,12 +61,12 @@ services:
        retries: 3
        start_period: 10s
     volumes:
-       - pgadmin-store:/var/lib/pgadmin
+      - pgadmin-store:/var/lib/pgadmin
     networks:
-       - frontend_bridge
-       - database_network_default
+      - frontend_bridge
+      - database_network_default
     ports:
-       - "${PGADMIN_WEBPORT:-30001-30200}:80"
+      - "${PGADMIN_WEBPORT:-30001-30200}:80"
 
 volumes:
   pgadmin-store:
