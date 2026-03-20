@@ -11,6 +11,10 @@ services:
       LANG: C
       LANGUAGE: C
       LC_ALL: C
+    tmpfs:
+      - /tmp
+      - /run
+      - /var/run
     restart: unless-stopped
     depends_on:
       zabbix-database:
