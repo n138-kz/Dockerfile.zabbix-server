@@ -2,10 +2,8 @@ services:
 #
   zabbix-server:
     extends:
-      - file: common-logging.yml
-        service: base-service
-      - file: common-healthcheck.yml
-        service: base-service
+      file: common.yml
+      service: base-service
     build:
       context: ./zabbix-server/
     environment:
@@ -25,10 +23,8 @@ services:
 #
   zabbix-database:
     extends:
-      - file: common-logging.yml
-        service: base-service
-      - file: common-healthcheck.yml
-        service: base-service
+      file: common.yml
+      service: base-service
     image: postgres:16
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-zabbix}
@@ -47,10 +43,8 @@ services:
 #
   zabbix-database-webmin:
     extends:
-      - file: common-logging.yml
-        service: base-service
-      - file: common-healthcheck.yml
-        service: base-service
+      file: common.yml
+      service: base-service
     image: dpage/pgadmin4:latest
     environment:
       TZ: Asia/Tokyo
