@@ -13,3 +13,9 @@ docker compose down -v; docker compose build --no-cache; git diff; docker compos
 ```sh
 zcat server.sql.gz | docker compose exec -T zabbix-database psql -U zabbix -d zabbix
 ```
+
+3. zabbix-server 再起動
+
+```sh
+docker compose restart zabbix-server; docker compose logs zabbix-server; docker compose ps
+```
