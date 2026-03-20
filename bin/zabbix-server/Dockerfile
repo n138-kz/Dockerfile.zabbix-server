@@ -19,4 +19,4 @@ run apt-get update
 run apt-get install -y zabbix-server-pgsql zabbix-frontend-php php8.3-pgsql zabbix-apache-conf zabbix-sql-scripts zabbix-agent
 
 # Create initial database
-run zcat /usr/share/zabbix/sql-scripts/postgresql/server.sql.gz | sudo -u zabbix psql zabbix
+run zcat /usr/share/zabbix/sql-scripts/postgresql/server.sql.gz | psql -h database zabbix
