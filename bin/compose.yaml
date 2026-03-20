@@ -55,11 +55,11 @@ services:
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-password}
     restart: unless-stopped
     healthcheck:
-       test: wget -O - http://localhost:80/misc/healthcheck
-       interval: 10s
-       timeout: 1s
-       retries: 3
-       start_period: 10s
+      test: wget -O - http://localhost:80/misc/healthcheck
+      interval: 10s
+      timeout: 1s
+      retries: 3
+      start_period: 10s
     volumes:
       - pgadmin-store:/var/lib/pgadmin
     networks:
