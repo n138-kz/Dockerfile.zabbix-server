@@ -5,6 +5,7 @@ run apt-get update
 run apt-get upgrade -y
 
 run apt-get install -y wget
+run apt-get install -y postgresql-client
 
 # https://www.zabbix.com/jp/download
 # https://www.zabbix.com/jp/download?zabbix=7.4&os_distribution=ubuntu&os_version=24.04&components=server_frontend_agent&db=pgsql&ws=apache
@@ -18,3 +19,4 @@ run apt-get update
 run apt-get install -y zabbix-server-pgsql zabbix-frontend-php php8.3-pgsql zabbix-apache-conf zabbix-sql-scripts zabbix-agent
 
 # Create initial database
+run zcat /usr/share/zabbix/sql-scripts/postgresql/server.sql.gz | sudo -u zabbix psql zabbix
