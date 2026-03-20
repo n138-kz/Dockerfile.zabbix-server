@@ -1,6 +1,6 @@
 from ubuntu
 workdir /tmp
-run apt update
+run apt update && DEBIAN_FRONTEND=noninteractive
 run apt upgrade -y
 # https://www.zabbix.com/jp/download
 # https://www.zabbix.com/jp/download?zabbix=7.4&os_distribution=ubuntu&os_version=24.04&components=server_frontend_agent&db=pgsql&ws=apache
