@@ -13,7 +13,8 @@ services:
       LC_ALL: C
     restart: unless-stopped
     networks:
-      - frontend_bridge
+       - frontend_bridge
+       - database_network_default
 #
   zabbix-database:
     extends:
