@@ -17,6 +17,18 @@ services:
               max-file: "10"
     zabbix-database:
         image: postgres
+        environment:
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+            POSTGRES_DB: ${POSTGRES_DB:-zabbix}
+        volumes:
+            - database-store:/var/lib/postgresql/data
+        networks:
+            - database_network_default
+        logging:
+          driver: json-file
+          options:
+              max-size: "1024k"
+              max-file: "10"
     zabbix-database-webmin:
         build:
             context: ./zabbix-server/
@@ -50,6 +62,7 @@ services:
 
 volumes:
     pgadmin-store:
+    database-store:
 networks:
     frontend_bridge:
     database_network_default:
